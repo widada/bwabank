@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\TopUpController;
+use App\Http\Controllers\Api\TransferController;
 use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\Api\PaymentMethodController;
 
@@ -34,6 +35,8 @@ Route::group(['middleware' => 'jwt.verify'], function ($router) {
     Route::get('wallets', [WalletController::class, 'show']);
 
     Route::post('top_ups', [TopUpController::class, 'store']);
+
+    Route::post('transfer', [TransferController::class, 'store']);
 
     Route::get('payment_methods', [PaymentMethodController::class, 'index']);
 });
