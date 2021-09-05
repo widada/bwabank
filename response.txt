@@ -1,0 +1,21 @@
+{
+    "message": "Error message",
+    "data": {
+        "meta": {
+            "page": 1
+        },
+        "products": [
+
+        ]
+    }
+}
+
+
+200 Ok
+201 Created
+
+400 Bad Request
+401 Unauthorized / Unauthenticated
+404 Resource Not Found
+409 Conflict
+500 Internal Server Error
