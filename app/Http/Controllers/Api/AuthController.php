@@ -21,15 +21,27 @@ class AuthController extends Controller
         $validator = Validator::make($data, [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'username' => 'required|unique:users',
-            'password' => 'required|string|min:6|max:50'
+            'email' => 'required|email',
+            'username' => 'required',
+            'password' => 'required|string|min:6'
         ]);
         
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->messages()], 400);
         }
 
+        $user = User::where('email', $request->email)
+                    ->orWhere('username', $request->username)
+                    ->first();
+        
+        if ($user && $user->username == $request->username) {
+            return response()->json(['message' => 'Username already taken'], 409);
+        }
+
+        if ($user && $user->email == $request->email) {
+            return response()->json(['message' => 'Email already exist'], 409);
+        }
+        
         // $decoder = new Base64ImageDecoder($request->profile_picture, $allowedFormats = ['jpeg', 'png', 'jpg']);
         // if (!$decoder)
         
