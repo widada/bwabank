@@ -17,9 +17,13 @@ class TransferController extends Controller
 {
     private $paymentMethod;
 
+    private $transactionCode;
+
     public function __construct()
     {
         $this->paymentMethod = PaymentMethod::where('code', 'bwa')->first();
+
+        $this->transactionCode = strtoupper(Str::random(10));
     }
 
     public function store(Request $request)
@@ -27,7 +31,7 @@ class TransferController extends Controller
         $data = $request->only('amount', 'pin', 'username');
             
         $validator = Validator::make($data, [
-            'amount' => 'required|integer|min:10000',
+            'amount' => 'required|integer|min:1000',
             'pin' => 'required|digits:6',
             'username' => 'required'
         ]);
@@ -50,11 +54,10 @@ class TransferController extends Controller
         }
 
         $userTransferWallet = Wallet::where('user_id', $userTransfer->id)->first();
-        echo $userTransferWallet->balance;
+        
         if ($userTransferWallet->balance < $request->amount) {
             return response()->json(['message' => 'Your Balance is Not Enough'], 400);
         }
-
 
         DB::beginTransaction();
         try {
@@ -79,7 +82,7 @@ class TransferController extends Controller
             $receiveTransaction = $this->createTransaction([
                 'user_id' => $userReceive->id,
                 'transaction_type_id' => $receiveTransactionType->id,
-                'description' => 'Receive funds from '.$userReceive->username,
+                'description' => 'Receive funds from '.$userTransfer->username,
                 'amount' => $request->amount
             ]);
 
@@ -100,7 +103,7 @@ class TransferController extends Controller
             'transaction_type_id' => $params['transaction_type_id'],
             'payment_method_id' => $this->paymentMethod->id,
             'amount' => $params['amount'],
-            'transaction_code' => strtoupper(Str::random(10)),
+            'transaction_code' => $this->transactionCode,
             'description' => $params['description'],
             'status' => 'success',
         ]);

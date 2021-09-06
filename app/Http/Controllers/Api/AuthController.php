@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\DB;
+use Melihovv\Base64ImageDecoder\Base64ImageEncoder;
 
 class AuthController extends Controller
 {
@@ -28,6 +29,9 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->messages()], 400);
         }
+
+        // $decoder = new Base64ImageDecoder($request->profile_picture, $allowedFormats = ['jpeg', 'png', 'jpg']);
+        // if (!$decoder)
         
         DB::beginTransaction();
 

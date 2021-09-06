@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be2b0652a940796c96d22fcce30d064a",
+    "content-hash": "122c3f4ecbc096e8e96e6eedf6dc16a9",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1588,6 +1588,56 @@
                 }
             ],
             "time": "2021-01-18T20:58:21+00:00"
+        },
+        {
+            "name": "melihovv/base64-image-decoder",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/melihovv/base64-image-decoder.git",
+                "reference": "3c4bdc11f8d4e932a0d9fad48f5fe86cd534daf6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/melihovv/base64-image-decoder/zipball/3c4bdc11f8d4e932a0d9fad48f5fe86cd534daf6",
+                "reference": "3c4bdc11f8d4e932a0d9fad48f5fe86cd534daf6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "ext-gd": "*",
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Melihovv\\Base64ImageDecoder\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Melihov",
+                    "email": "amelihovv@ya.ru"
+                }
+            ],
+            "description": "A base64 image decoder",
+            "keywords": [
+                "base64",
+                "decoder",
+                "image"
+            ],
+            "support": {
+                "issues": "https://github.com/melihovv/base64-image-decoder/issues",
+                "source": "https://github.com/melihovv/base64-image-decoder/tree/master"
+            },
+            "time": "2018-09-08T08:35:25+00:00"
         },
         {
             "name": "midtrans/midtrans-php",
