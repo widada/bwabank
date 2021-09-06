@@ -29,4 +29,19 @@ class Transaction extends Model
         'created_at' => 'datetime:Y-m-d H:m:s',
         'updated_at' => 'datetime:Y-m-d H:m:s'
     ];
+
+    public function transactionType()
+    {
+        return $this->belongsTo(TransactionType::class);
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }
