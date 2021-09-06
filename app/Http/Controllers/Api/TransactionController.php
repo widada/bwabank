@@ -15,7 +15,7 @@ class TransactionController extends Controller
 
         $relations = [
             'product',
-            'paymentMethod:id,name,code',
+            'paymentMethod:id,name,code,thumbnail',
             'transactionType:id,code,action'
         ];
 
@@ -24,6 +24,7 @@ class TransactionController extends Controller
         $transactions = Transaction::with($relations)
                                     ->where('user_id', $user->id)
                                     ->where('status', 'success')
+                                    ->orderBy('id', 'desc')
                                     ->paginate($limit);
 
         return response()->json($transactions);
