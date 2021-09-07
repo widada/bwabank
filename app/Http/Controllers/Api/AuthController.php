@@ -21,7 +21,8 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|email',
             'username' => 'required',
-            'password' => 'required|string|min:6'
+            'password' => 'required|string|min:6',
+            'pin' => 'required|digits:6'
         ]);
         
         if ($validator->fails()) {
@@ -65,7 +66,8 @@ class AuthController extends Controller
 
             Wallet::create([
                 'user_id' => $user->id,
-                'balance' => 0
+                'balance' => 0,
+                'pin' => bcrypt($request->pin)
             ]);
 
             DB::commit();
