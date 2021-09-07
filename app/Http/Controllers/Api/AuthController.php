@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Models\Wallet;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\DB;
-use Melihovv\Base64ImageDecoder\Base64ImageEncoder;
 
 class AuthController extends Controller
 {
@@ -19,8 +18,7 @@ class AuthController extends Controller
         $data = $request->all();
         
         $validator = Validator::make($data, [
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
+            'name' => 'required|string',
             'email' => 'required|email',
             'username' => 'required',
             'password' => 'required|string|min:6'
@@ -42,18 +40,27 @@ class AuthController extends Controller
             return response()->json(['message' => 'Email already exist'], 409);
         }
         
-        // $decoder = new Base64ImageDecoder($request->profile_picture, $allowedFormats = ['jpeg', 'png', 'jpg']);
-        // if (!$decoder)
         
         DB::beginTransaction();
 
         try {
+            $profilePicture = null;
+            if ($request->profile_picture) {
+               $profilePicture = uploadBase64Image($request->profile_picture);
+            }
+
+            $ktp = null;
+            if ($request->ktp) {
+                $ktp = uploadBase64Image($request->ktp);
+            }
+
             $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
+                'name' => $request->name,
                 'email' => $request->email,
                 'username' => $request->username,
-                'password' => bcrypt($request->password)
+                'password' => bcrypt($request->password),
+                'profile_picture' => $profilePicture,
+                'ktp' => $ktp
             ]);
 
             Wallet::create([

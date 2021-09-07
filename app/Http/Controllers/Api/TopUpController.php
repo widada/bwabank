@@ -89,10 +89,10 @@ class TopUpController extends Controller
         ];
 
         $user = auth()->user();
-
+        $splitName = $this->splitName($user->name);
         $customerDetails = [
-            'first_name' => $user->first_name,
-            'last_name' => $user->last_name,
+            'first_name' => $splitName['first_name'],
+            'last_name' => $splitName['last_name'],
             'email' => $user->email
         ];
 
@@ -104,6 +104,19 @@ class TopUpController extends Controller
             'transaction_details' => $transactionDetails,
             'customer_details' => $customerDetails,
             'enabled_payments' => $enabledPayments
+        ];
+    }
+
+    private function splitName($fullName)
+    {
+        $name = explode(' ', $fullName);
+        
+        $lastName = count($name)  > 1 ? array_pop($name) : $fullName;
+        $firstName = implode(' ', $name);
+
+        return [
+            'first_name' => $firstName,
+            'last_name' => $lastName
         ];
     }
 }
