@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    });
+
+    Route::get('/transaction', [TransactionController::class, 'index'])->name('admin.transaction.index');
 });
 
 Route::get('/payment_success', function () {
