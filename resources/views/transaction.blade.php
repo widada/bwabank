@@ -15,11 +15,11 @@
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
+                  <th>Amount</th>
                   <th>Transaction Type</th>
                   <th>Payment Method</th>
                   <th>Status</th>
                   <th>Date</th>
-                  <th>Description</th>
                 </tr>
               </thead>
               <tbody>
@@ -27,11 +27,11 @@
                   <tr>
                     <td>{{ $transaction->user->id }}</td>
                     <td>{{ $transaction->user->name }}</td>
+                    <td>{{ number_format($transaction->amount) }}</td>
                     <td>{{ $transaction->transactionType->code }}</td>
                     <td>{{ $transaction->paymentMethod->name }}</td>
                     <td>{{ $transaction->status }}</td>
                     <td>{{ $transaction->updated_at }}</td>
-                    <td>{{ $transaction->description }}</td>
                   </tr>
                 @endforeach
               </tbody>
