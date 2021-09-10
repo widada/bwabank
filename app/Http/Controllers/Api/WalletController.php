@@ -11,18 +11,23 @@ class WalletController extends Controller
 {
     public function update(Request $request)
     {
-        $validator = Validator::make($request->only('pin'), [
-            'pin' => 'required|digits:6'
+        $validator = Validator::make($request->all(), [
+            'previous_pin' => 'required|digits:6',
+            'new_pin' => 'required|digits:6'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->messages()], 400);
         }
 
+        if (!pinChecker($request->previous_pin)) {
+            return response()->json(['message' => 'Your Old Pin is Wrong'], 400);
+        }
+
         $user = auth()->user();
 
         Wallet::where('user_id', $user->id)
-            ->update(['pin' => bcrypt($request->pin)]);
+            ->update(['pin' => bcrypt($request->new_pin)]);
 
         return response()->json(['message' => 'Pin updated']);
     }
