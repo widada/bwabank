@@ -28,35 +28,43 @@ class TransferController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->only('amount', 'pin', 'username');
+        $data = $request->only('amount', 'pin', 'send_to');
             
         $validator = Validator::make($data, [
             'amount' => 'required|integer|min:1000',
             'pin' => 'required|digits:6',
-            'username' => 'required'
+            'send_to' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->messages()], 400);
         }
 
-        $userTransfer = auth()->user();
+        $sender = auth()->user();
         $paymentMethod = PaymentMethod::where('code', 'bwa')->first();
-        $userReceive = User::where('username', $request->username)->first();
+        $receiver = User::select('users.id')
+                            ->join('wallets', 'wallets.user_id', 'users.id')
+                            ->where('users.username', $request->send_to)
+                            ->orWhere('wallets.card_number', $request->send_to)
+                            ->first();
         
         $pinChecker = pinChecker($request->pin);
         if (!$pinChecker) {
             return response()->json(['message' => 'Your PIN is wrong'], 400);
         }
         
-        if (!$userReceive) {
-            return response()->json(['message' => 'Username Not Found'], 404);
+        if (!$receiver) {
+            return response()->json(['message' => 'User receiver not found'], 404);
         }
 
-        $userTransferWallet = Wallet::where('user_id', $userTransfer->id)->first();
+        if ($sender->id == $receiver->id) {
+            return response()->json(['message' => 'You can\'t transfer to yourself'], 400);
+        }
+
+        $senderWallet = Wallet::where('user_id', $sender->id)->first();
         
-        if ($userTransferWallet->balance < $request->amount) {
-            return response()->json(['message' => 'Your Balance is Not Enough'], 400);
+        if ($senderWallet->balance < $request->amount) {
+            return response()->json(['message' => 'Your balance is not enough'], 400);
         }
 
         DB::beginTransaction();
@@ -70,23 +78,23 @@ class TransferController extends Controller
 
             // Create transaction for transfer
             $transferTransaction = $this->createTransaction([
-                'user_id' => $userTransfer->id,
+                'user_id' => $sender->id,
                 'transaction_type_id' => $transferTransactionType->id,
-                'description' => 'Transfer funds to '.$userReceive->username,
+                'description' => 'Transfer funds to '.$receiver->username,
                 'amount' => $request->amount
             ]);
 
-            $userTransferWallet->decrement('balance', $request->amount);
+            $senderWallet->decrement('balance', $request->amount);
 
             // craete transaction for receive
             $receiveTransaction = $this->createTransaction([
-                'user_id' => $userReceive->id,
+                'user_id' => $receiver->id,
                 'transaction_type_id' => $receiveTransactionType->id,
-                'description' => 'Receive funds from '.$userTransfer->username,
+                'description' => 'Receive funds from '.$sender->username,
                 'amount' => $request->amount
             ]);
 
-            Wallet::where('user_id', $userReceive->id)->increment('balance', $request->amount);
+            Wallet::where('user_id', $receiver->id)->increment('balance', $request->amount);
 
             DB::commit();
             return response(['message' => 'Transfer Success']);

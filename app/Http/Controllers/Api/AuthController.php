@@ -28,16 +28,10 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->messages()], 400);
         }
 
-        $user = User::where('email', $request->email)
-                    ->orWhere('username', $request->username)
-                    ->first();
+        $user = User::where('email', $request->email)->exists();
         
-        if ($user && $user->username == $request->username) {
+        if ($user) {
             return response()->json(['message' => 'Username already taken'], 409);
-        }
-
-        if ($user && $user->email == $request->email) {
-            return response()->json(['message' => 'Email already exist'], 409);
         }
         
         
@@ -63,10 +57,13 @@ class AuthController extends Controller
                 'ktp' => $ktp
             ]);
 
+            $cardNumber = $this->generateCardNumber(16);
+
             Wallet::create([
                 'user_id' => $user->id,
                 'balance' => 0,
-                'pin' => bcrypt($request->pin)
+                'pin' => bcrypt($request->pin),
+                'card_number' => $cardNumber
             ]);
 
             DB::commit();
@@ -108,7 +105,21 @@ class AuthController extends Controller
  	
     }
 
-    protected function respondWithToken($token)
+    private function generateCardNumber($length)
+    {
+        $result = '';
+        for($i = 0; $i < $length; $i++) {
+            $result .= mt_rand(0, 9);
+        }
+
+        $wallet = Wallet::where('card_number', $result)->exists();
+        if ($wallet) {
+            return $this->generateCardNumber($length);
+        }
+        return $result;
+    }
+
+    private function respondWithToken($token)
     {
         return [
             'access_token' => $token,

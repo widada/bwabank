@@ -22,6 +22,7 @@ class UserController extends Controller
         $userDatabase->ktp = $userDatabase->ktp ? 
             url('storage/'.$userDatabase->ktp) : "";
         $userDatabase->balance = $wallet->balance;
+        $userDatabase->card_number = $wallet->card_number;
 
         return response()->json($userDatabase);
     }
@@ -36,12 +37,7 @@ class UserController extends Controller
             return response()->json(['errors' => $validator->messages()], 400);
         }
 
-        $isExist = false;
-        $user = User::where('email', $request->email)->first();
-        
-        if ($user) {
-            $isExist = true;
-        }
+        $isExist = User::where('email', $request->email)->exists();
 
         return response()->json(['is_email_exist' => $isExist]);
     }
