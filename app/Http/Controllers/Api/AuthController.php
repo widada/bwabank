@@ -31,7 +31,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->exists();
         
         if ($user) {
-            return response()->json(['message' => 'Username already taken'], 409);
+            return response()->json(['message' => 'Email already taken'], 409);
         }
         
         

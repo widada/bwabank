@@ -36,7 +36,7 @@ class WalletController extends Controller
     {
         $user = auth()->user();
 
-        $wallet = Wallet::select('balance')->where('user_id', $user->id)->first();
+        $wallet = Wallet::select('balance', 'card_number')->where('user_id', $user->id)->first();
 
         return response()->json($wallet);
     }
