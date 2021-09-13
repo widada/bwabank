@@ -7,16 +7,23 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
 
+    private $user;
+
+    public function __construct()
+    {
+        $this->user = auth()->user();
+    }
+
     public function show()
     {
-        $user = auth()->user();
-        $wallet = Wallet::where('user_id', $user->id)->first();
+        $wallet = Wallet::where('user_id', $this->user->id)->first();
         
-        $userDatabase = User::find($user->id);
+        $userDatabase = User::find($this->user->id);
         $userDatabase->profile_picture = $userDatabase->profile_picture ? 
             url('storage/'.$userDatabase->profile_picture) : "";
         $userDatabase->ktp = $userDatabase->ktp ? 
@@ -25,6 +32,57 @@ class UserController extends Controller
         $userDatabase->card_number = $wallet->card_number;
 
         return response()->json($userDatabase);
+    }
+
+    public function update(Request $request)
+    {
+
+        try {
+            $user = User::find($this->user->id);
+
+            $data = $request->only('name', 'username', 'ktp', 'username', 'email', 'password');
+    
+            if ($request->username != $user->username) {
+                $isExistUsername = User::where('username', $request->username)->exists();
+                if ($isExistUsername) {
+                    return response(['message' => 'Username already taken'], 409);
+                }
+            }
+    
+            if ($request->email != $user->email) {
+                $isExistUsername = User::where('email', $request->email)->exists();
+                if ($isExistUsername) {
+                    return response(['message' => 'Email already taken'], 409);
+                }
+            }
+    
+            if ($request->password) {
+                $data['password'] = bcrypt($request->password);
+            }
+    
+            if ($request->profile_picture) {
+                $profilePicture = uploadBase64Image($request->profile_picture);
+                $data['profile_picture'] = $profilePicture;
+                if ($user->profile_picture) {
+                    Storage::delete('public/'.$user->profile_picture);
+                }
+            }
+    
+            if ($request->ktp) {
+                $ktp = uploadBase64Image($request->ktp);
+                $data['ktp'] = $ktp;
+                if ($user->ktp) {
+                    Storage::delete('public/'.$user->ktp);
+                }
+            }
+    
+            $user->update($data);
+    
+            return response()->json(['message' => 'Updated']);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
+
     }
 
     public function isEmailExist(Request $request)
