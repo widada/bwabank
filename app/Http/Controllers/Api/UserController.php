@@ -36,47 +36,51 @@ class UserController extends Controller
     public function update(Request $request)
     {
 
-        $user = User::find($this->user->id);
+        try {
+            $user = User::find($this->user->id);
 
-        $data = $request->only('name', 'username', 'ktp', 'username', 'email', 'password');
-
-        if ($request->username != $user->username) {
-            $isExistUsername = User::where('username', $request->username)->exists();
-            if ($isExistUsername) {
-                return response(['message' => 'Username already taken'], 409);
+            $data = $request->only('name', 'username', 'ktp', 'username', 'email', 'password');
+    
+            if ($request->username != $user->username) {
+                $isExistUsername = User::where('username', $request->username)->exists();
+                if ($isExistUsername) {
+                    return response(['message' => 'Username already taken'], 409);
+                }
             }
-        }
-
-        if ($request->email != $user->email) {
-            $isExistUsername = User::where('email', $request->email)->exists();
-            if ($isExistUsername) {
-                return response(['message' => 'Email already taken'], 409);
+    
+            if ($request->email != $user->email) {
+                $isExistUsername = User::where('email', $request->email)->exists();
+                if ($isExistUsername) {
+                    return response(['message' => 'Email already taken'], 409);
+                }
             }
-        }
-
-        if ($request->password) {
-            $data['password'] = bcrypt($request->password);
-        }
-
-        if ($request->profile_picture) {
-            $profilePicture = uploadBase64Image($request->profile_picture);
-            $data['profile_picture'] = $profilePicture;
-            if ($user->profile_picture) {
-                Storage::delete($user->profile_picture);
+    
+            if ($request->password) {
+                $data['password'] = bcrypt($request->password);
             }
-        }
-
-        if ($request->ktp) {
-            $ktp = uploadBase64Image($request->ktp);
-            $data['ktp'] = $ktp;
-            if ($user->ktp) {
-                Storage::delete($user->ktp);
+    
+            if ($request->profile_picture) {
+                $profilePicture = uploadBase64Image($request->profile_picture);
+                $data['profile_picture'] = $profilePicture;
+                if ($user->profile_picture) {
+                    Storage::delete('public/'.$user->profile_picture);
+                }
             }
+    
+            if ($request->ktp) {
+                $ktp = uploadBase64Image($request->ktp);
+                $data['ktp'] = $ktp;
+                if ($user->ktp) {
+                    Storage::delete('public/'.$user->ktp);
+                }
+            }
+    
+            $user->update($data);
+    
+            return response()->json(['message' => 'Updated']);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
         }
-
-        $user->update($data);
-
-        return response()->json(['message' => 'Updated']);
 
     }
 
