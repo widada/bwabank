@@ -13,7 +13,7 @@ function pinChecker($pin) {
 
     if ($wallet == null) return false;
 
-    if (Hash::check($pin, $wallet->pin)) return true;
+    if ($wallet->pin == $pin) return true;
     return false;
 }
 
