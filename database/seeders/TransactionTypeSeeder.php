@@ -17,24 +17,28 @@ class TransactionTypeSeeder extends Seeder
         DB::table('transaction_types')->insert(
             [ 
                 [
+                    'name' => 'Transfer',
                     'code' => 'transfer',
                     'action' => 'dr',
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
                 [
+                    'name' => 'Purchase',
                     'code' => 'purchase',
                     'action' => 'dr',
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
                 [
+                    'name' => 'Top Up',
                     'code' => 'top_up',
                     'action' => 'cr',
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
                 [
+                    'name' => 'Receive',
                     'code' => 'receive',
                     'action' => 'cr',
                     'created_at' => now(),

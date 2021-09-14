@@ -21,17 +21,9 @@ class UserController extends Controller
 
     public function show()
     {
-        $wallet = Wallet::where('user_id', $this->user->id)->first();
-        
-        $userDatabase = User::find($this->user->id);
-        $userDatabase->profile_picture = $userDatabase->profile_picture ? 
-            url('storage/'.$userDatabase->profile_picture) : "";
-        $userDatabase->ktp = $userDatabase->ktp ? 
-            url('storage/'.$userDatabase->ktp) : "";
-        $userDatabase->balance = $wallet->balance;
-        $userDatabase->card_number = $wallet->card_number;
+        $user = getUserById($this->user->id);
 
-        return response()->json($userDatabase);
+        return response()->json($user);
     }
 
     public function update(Request $request)

@@ -62,13 +62,20 @@ class AuthController extends Controller
             Wallet::create([
                 'user_id' => $user->id,
                 'balance' => 0,
-                'pin' => bcrypt($request->pin),
+                'pin' => $request->pin,
                 'card_number' => $cardNumber
             ]);
 
             DB::commit();
 
-            return response()->json(['message' => 'User created'], 201);
+            $token = JWTAuth::attempt(['email' => $request->email, 'password' => $request->password]);
+
+            $userResponse = getUser($user->id);
+            $userResponse->token = $token;
+            $userResponse->token_expires_in = auth()->factory()->getTTL() * 60;
+            $userResponse->token_type = 'bearer';
+
+            return response()->json($userResponse);
         } catch (\Throwable $th) {
             DB::rollback();
             return response()->json(['message' => $th->getMessage()], 500);
@@ -97,7 +104,12 @@ class AuthController extends Controller
                 return response()->json(['message' => 'Login credentials are invalid'], 400);
             }
 
-            return response()->json($this->respondWithToken($token));
+            $userResponse = getUser($request->email);
+            $userResponse->token = $token;
+            $userResponse->token_expires_in = auth()->factory()->getTTL() * 60;
+            $userResponse->token_type = 'bearer';
+
+            return response()->json($userResponse);
 
         } catch (JWTException $e) {
             return response()->json(['message' => $e->getMessage()], 500);
@@ -117,15 +129,6 @@ class AuthController extends Controller
             return $this->generateCardNumber($length);
         }
         return $result;
-    }
-
-    private function respondWithToken($token)
-    {
-        return [
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ];
     }
 
     public function logout()

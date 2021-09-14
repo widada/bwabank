@@ -16,7 +16,7 @@ class TransactionController extends Controller
         $relations = [
             'product',
             'paymentMethod:id,name,code,thumbnail',
-            'transactionType:id,code,action'
+            'transactionType:id,name,code,action,thumbnail'
         ];
 
         $user = auth()->user();

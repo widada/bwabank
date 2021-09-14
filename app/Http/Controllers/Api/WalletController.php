@@ -27,7 +27,7 @@ class WalletController extends Controller
         $user = auth()->user();
 
         Wallet::where('user_id', $user->id)
-            ->update(['pin' => bcrypt($request->new_pin)]);
+            ->update(['pin' => $request->new_pin]);
 
         return response()->json(['message' => 'Pin updated']);
     }
@@ -36,7 +36,7 @@ class WalletController extends Controller
     {
         $user = auth()->user();
 
-        $wallet = Wallet::select('balance', 'card_number')->where('user_id', $user->id)->first();
+        $wallet = Wallet::select('pin', 'balance', 'card_number')->where('user_id', $user->id)->first();
 
         return response()->json($wallet);
     }

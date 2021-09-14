@@ -12,8 +12,9 @@ class TransactionType extends Model
     protected $table = 'transaction_types';
 
     protected $fillable = [
+        'name',
         'code',
-        'action'
+        'action',
     ];
 
     protected $casts = [

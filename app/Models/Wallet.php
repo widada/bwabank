@@ -18,10 +18,6 @@ class Wallet extends Model
         'card_number'
     ];
 
-    protected $hidden = [
-        'pin'
-    ];
-
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:m:s',
         'updated_at' => 'datetime:Y-m-d H:m:s'
