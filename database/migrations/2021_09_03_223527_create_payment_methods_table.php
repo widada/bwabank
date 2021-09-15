@@ -19,6 +19,7 @@ class CreatePaymentMethodsTable extends Migration
             $table->string('code');
             $table->string('thumbnail')->nullable();
             $table->enum('status', ['active', 'inactive']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

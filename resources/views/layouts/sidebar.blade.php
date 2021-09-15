@@ -30,7 +30,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ route('admin.transaction.index') }}" class="nav-link">
+          <a href="{{ route('admin.transactions.index') }}" class="nav-link">
             <i class="nav-icon fas fa-chart-bar"></i>
             <p>
               Transaction
@@ -54,7 +54,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="" class="nav-link">
+          <a href="{{ route('admin.payment_methods.index') }}" class="nav-link">
             <i class="nav-icon fas fa-credit-card"></i>
             <p>
               Payment Method
