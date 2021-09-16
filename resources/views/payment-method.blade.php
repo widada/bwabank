@@ -9,6 +9,11 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
+          @if (session('success'))
+            <div class="alert alert-success">
+              {{ session('success') }}
+            </div>
+          @endif
           <div class="card-body table-responsive p-0">
             <table id="payment-method" class="table table-hover text-nowrap">
               <thead>
@@ -27,7 +32,18 @@
                     <td>{{ $payment_method->name }}</td>
                     <td><img alt="thumbnail" src="{{ asset('storage/'.$payment_method->thumbnail) }}" width="100" height="100"></td>
                     <td>{{ $payment_method->status }}</td>
-                    <td></td>
+                    <td>
+                      <form action="{{ route('admin.payment_methods.destroy', $payment_method->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <a href="{{ route('admin.payment_methods.edit', $payment_method->id) }}">
+                          <i class="fas fa-edit  fa-lg"></i>
+                        </a>
+                        <button type="submit" title="delete" style="border: none; background-color:transparent;"">
+                          <i class="fas fa-trash fa-lg text-danger"></i>
+                        </button>
+                    </form>
+                    </td>
                   </tr>
                 @endforeach
               </tbody>

@@ -19,8 +19,9 @@
                 </ul>
               </div>
             @endif
-            <form method="POST" action="{{ route('admin.payment_methods.update') }}" enctype="multipart/form-data">
-              {{ csrf_field() }}
+            <form method="POST" action="{{ route('admin.payment_methods.update', $payment_method->id) }}" enctype="multipart/form-data">
+              @csrf
+              @method('PUT')
               <div class="card-body">
                 <div class="form-group">
                   <label for="name">Name</label>
