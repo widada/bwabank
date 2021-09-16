@@ -54,7 +54,8 @@ class AuthController extends Controller
                 'username' => $request->email,
                 'password' => bcrypt($request->password),
                 'profile_picture' => $profilePicture,
-                'ktp' => $ktp
+                'ktp' => $ktp,
+                'verified' => ($ktp) ? true : false
             ]);
 
             $cardNumber = $this->generateCardNumber(16);

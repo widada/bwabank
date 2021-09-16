@@ -26,6 +26,21 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    public function getUserByUsername(Request $request, $username)
+    {
+        $users = User::select('id', 'name', 'username', 'verified', 'profile_picture')
+                    ->where('username', 'LIKE', '%'.$username.'%')->get();
+
+        $users->map(function ($item) {
+            $item->profile_picture = $item->profile_picture ? 
+                url('storage/'.$item->profile_picture) : "";
+
+            return $item; 
+        });
+
+        return response()->json($users);
+    }
+
     public function update(Request $request)
     {
 
@@ -63,6 +78,7 @@ class UserController extends Controller
             if ($request->ktp) {
                 $ktp = uploadBase64Image($request->ktp);
                 $data['ktp'] = $ktp;
+                $data['verified'] = true;
                 if ($user->ktp) {
                     Storage::delete('public/'.$user->ktp);
                 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\TransferHistory;
 use App\Models\TransactionType;
 use App\Models\Wallet;
 use App\Models\User;
@@ -42,7 +43,7 @@ class TransferController extends Controller
 
         $sender = auth()->user();
         $paymentMethod = PaymentMethod::where('code', 'bwa')->first();
-        $receiver = User::select('users.id')
+        $receiver = User::select('users.id, users.username')
                             ->join('wallets', 'wallets.user_id', 'users.id')
                             ->where('users.username', $request->send_to)
                             ->orWhere('wallets.card_number', $request->send_to)
@@ -95,6 +96,12 @@ class TransferController extends Controller
             ]);
 
             Wallet::where('user_id', $receiver->id)->increment('balance', $request->amount);
+
+            TransferHistory::create([
+                'sender_id' => $sender->id,
+                'receiver_id' => $receiver->id,
+                'transaction_code' => $this->transactionCode
+            ]);
 
             DB::commit();
             return response(['message' => 'Transfer Success']);
