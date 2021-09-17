@@ -5,11 +5,11 @@
 @section('header_title', 'Payment Methods')
 
 @section('content')
-<div class="row">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header">
-          <a href="{{ route('admin.payment_methods.create') }} " class="btn btn-primary">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <a href="{{ route('admin.transaction_types.create') }} " class="btn btn-primary">
             <i class="far fa-plus-square"></i>
           </a>
           @if (session('success'))
@@ -18,34 +18,36 @@
             </div>
           @endif
           <div class="card-body table-responsive p-0">
-            <table id="payment-method" class="table table-hover text-nowrap">
+            <table id="transaction-type" class="table table-hover text-nowrap">
               <thead>
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
                   <th>Thumbnail</th>
-                  <th>Status</th>
+                  <th>Code</th>
+                  <th>Type</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($payment_methods as $payment_method)
+                @foreach ($transaction_types as $transaction_type)
                   <tr>
-                    <td>{{ $payment_method->id }}</td>
-                    <td>{{ $payment_method->name }}</td>
-                    <td><img alt="thumbnail" src="{{ asset('storage/'.$payment_method->thumbnail) }}" width="100" height="100"></td>
-                    <td>{{ $payment_method->status }}</td>
+                    <td>{{ $transaction_type->id }}</td>
+                    <td>{{ $transaction_type->name }}</td>
+                    <td><img alt="thumbnail" src="{{ asset('storage/'.$transaction_type->thumbnail) }}" width="100" height="100"></td>
+                    <td>{{ $transaction_type->code }}</td>
+                    <td>{{ ($transaction_type->action == 'dr') ? 'Debit' : 'Credit' }}</td>
                     <td>
-                      <form action="{{ route('admin.payment_methods.destroy', $payment_method->id) }}" method="POST">
+                      <form action="{{ route('admin.transaction_types.destroy', $transaction_type->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <a href="{{ route('admin.payment_methods.edit', $payment_method->id) }}">
+                        <a href="{{ route('admin.transaction_types.edit', $transaction_type->id) }}">
                           <i class="fas fa-edit  fa-lg"></i>
                         </a>
                         <button type="submit" title="delete" style="border: none; background-color:transparent;"">
                           <i class="fas fa-trash fa-lg text-danger"></i>
                         </button>
-                    </form>
+                      </form>
                     </td>
                   </tr>
                 @endforeach
@@ -60,6 +62,6 @@
 
 @section('js')
     <script>
-      $('#payment-method').DataTable();
+      $('#transaction-type').DataTable();
     </script>
 @endsection

@@ -4,22 +4,23 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\PaymentMethod;
+use App\Models\TransactionType;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class PaymentMethodController extends Controller
+class TransactionTypeController extends Controller
 {
     public function index()
     {
-        $paymentMethods = PaymentMethod::all();
+        $transactionTypes = TransactionType::all();
 
-        return view('payment-method', ['payment_methods' => $paymentMethods]);
+        return view('transaction-type', ['transaction_types' => $transactionTypes]);
     }
 
     public function create()
     {
-        return view('payment-method-create');
+        return view('transaction-type-create');
     }
 
     public function store(Request $request)
@@ -28,7 +29,7 @@ class PaymentMethodController extends Controller
             'name' => 'required|string',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg',
             'code' => 'required|string',
-            'status' => 'required|in:active,inactive'
+            'action' => 'required|in:cr,dr'
         ]);
 
         $data = $request->except('thumbnail');
@@ -41,17 +42,17 @@ class PaymentMethodController extends Controller
         
         $data['thumbnail'] = $imageName;
 
-        PaymentMethod::create($data);
+        TransactionType::create($data);
 
-        return redirect()->route('admin.payment_methods.index')
-                ->with('success', 'Payment method created');
+        return redirect()->route('admin.transaction_types.index')
+                ->with('success', 'Transaction type created');
     }
 
     public function edit(Request $request, $id)
     {
-        $paymentMethod = PaymentMethod::find($id);
+        $transactionType = TransactionType::find($id);
 
-        return view('payment-method-edit', ['payment_method' => $paymentMethod]);
+        return view('transaction-type-edit', ['transaction_type' => $transactionType]);
     }
 
     public function update(Request $request, $id)
@@ -60,12 +61,12 @@ class PaymentMethodController extends Controller
             'name' => 'required|string',
             'thumbnail' => 'image|mimes:jpeg,png,jpg',
             'code' => 'required|string',
-            'status' => 'required|in:active,inactive'
+            'action' => 'required|in:cr,dr'
         ]);
 
         $data = $request->except('thumbnail');
 
-        $paymentMethod = PaymentMethod::find($id);
+        $transactionType = TransactionType::find($id);
 
         if ($request->thumbnail) {
             $image = $request->thumbnail;
@@ -76,21 +77,21 @@ class PaymentMethodController extends Controller
             
             $data['thumbnail'] = $imageName;
 
-            Storage::delete('public/'.$paymentMethod->thumbnail);
+            Storage::delete('public/'.$transactionType->thumbnail);
         }
 
-        $paymentMethod->update($data);
+        $transactionType->update($data);
 
-        return redirect()->route('admin.payment_methods.index')
-                ->with('success', 'Payment method updated');
+        return redirect()->route('admin.transaction_types.index')
+                ->with('success', 'Transaction type updated');
     }
 
     public function destroy(Request $request, $id)
     {
 
-        $paymentMethod = PaymentMethod::find($id)->delete();
+        TransactionType::find($id)->delete();
 
-        return redirect()->route('admin.payment_methods.index')
-                ->with('success', 'Payment method deleted');
+        return redirect()->route('admin.transaction_types.index')
+                ->with('success', 'Transaction type deleted');
     }
 }

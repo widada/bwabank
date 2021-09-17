@@ -16,6 +16,7 @@ class TransactionType extends Model
         'name',
         'code',
         'action',
+        'thumbnail'
     ];
 
     protected $casts = [
