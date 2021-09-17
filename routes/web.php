@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\TransactionTypeController;
+use App\Http\Controllers\Admin\TipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,15 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/edit/{id}', [TransactionTypeController::class, 'edit'])->name('admin.transaction_types.edit');
         Route::put('/update/{id}', [TransactionTypeController::class, 'update'])->name('admin.transaction_types.update');
         Route::delete('/destroy/{id}', [TransactionTypeController::class, 'destroy'])->name('admin.transaction_types.destroy');
+    });
+
+    Route::group(['prefix' => 'tips'], function () {
+        Route::get('/', [TipController::class, 'index'])->name('admin.tips.index');
+        Route::get('/create', [TipController::class, 'create'])->name('admin.tips.create');
+        Route::post('/store', [TipController::class, 'store'])->name('admin.tips.store');
+        Route::get('/edit/{id}', [TipController::class, 'edit'])->name('admin.tips.edit');
+        Route::put('/update/{id}', [TipController::class, 'update'])->name('admin.tips.update');
+        Route::delete('/destroy/{id}', [TipController::class, 'destroy'])->name('admin.tips.destroy');
     });
 });
 

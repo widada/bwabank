@@ -54,6 +54,14 @@
           </a>
         </li>
         <li class="nav-item">
+          <a href="{{ route('admin.tips.index') }}" class="nav-link">
+            <i class="nav-icon fas fa-newspaper"></i>
+            <p>
+              Tips
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
           <a href="" class="nav-link">
             <i class="nav-icon fas fa-sign-out-alt"></i>
             <p>

@@ -19,16 +19,16 @@
                 </ul>
               </div>
             @endif
-            <form method="POST" action="{{ route('admin.payment_methods.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.tips.store') }}" enctype="multipart/form-data">
               @csrf
               <div class="card-body">
                 <div class="form-group">
-                  <label for="name">Name</label>
-                  <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" placeholder="Enter name">
+                  <label for="name">Title</label>
+                  <input type="text" class="form-control" name="title" id="title" value="{{ old('title') }}" placeholder="Title">
                 </div>
                 <div class="form-group">
-                  <label for="code">Code</label>
-                  <input type="text" class="form-control" name="code" id="code" value="{{ old('code') }}" placeholder="Midtrans code">
+                  <label for="code">Url</label>
+                  <input type="text" class="form-control" name="url" id="url" value="{{ old('url') }}" placeholder="Article url">
                 </div>
                 <div class="form-group">
                   <label for="thumbnail">Thumbnail</label>
@@ -37,14 +37,6 @@
                       <input type="file" name="thumbnail" id="thumbnail">
                     </div>
                   </div>
-                </div>
-                <div class="form-group">
-                  <label for="status">Status</label>
-                  <select name="status" class="custom-select" id="status">
-                    <option value="">- No status -</option>
-                    <option value="active" {{ (old('status') === 'active') ? "selected" : "" }}>Active</option>
-                    <option value="inactive" {{ (old('status') === 'inactive') ? "selected" : "" }}>Inactive</option>
-                  </select>
                 </div>
               </div>
               <div class="card-footer">
