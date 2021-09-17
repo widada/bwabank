@@ -26,6 +26,17 @@ class TransactionController extends Controller
                                     ->where('status', 'success')
                                     ->orderBy('id', 'desc')
                                     ->paginate($limit);
+        
+        $transactions->getCollection()->transform(function ($item) {
+            $paymentMethod = $item->paymentMethod;
+            $item->paymentMethod->thumbnail =  $paymentMethod->thumbnail ? 
+                url('storage/'.$paymentMethod->thumbnail) : "";
+            
+            $transactionType = $item->transactionType;
+            $item->transactionType->thumbnail =  $transactionType->thumbnail ? 
+                url('storage/'.$transactionType->thumbnail) : "";
+            return $item;
+        });
 
         return response()->json($transactions);
     }

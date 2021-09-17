@@ -12,7 +12,11 @@ class PaymentMethodController extends Controller
     {
         $banks = PaymentMethod::where('status', 'active')
                             ->whereNotIn('code', ['bwa'])
-                            ->get();
+                            ->get()
+                            ->map(function ($item) {
+                                $item->thumbnail = $item->thumbnail ? url('storage/'.$item->thumbnail) : "";
+                                return $item;
+                            });
 
         return response()->json($banks);
     }
