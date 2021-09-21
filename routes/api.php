@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\PaymentMethodController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\TransferHistoryController;
 use App\Http\Controllers\Api\TipController;
+use App\Http\Controllers\Api\OperatorCardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,4 +52,6 @@ Route::group(['middleware' => 'jwt.verify'], function ($router) {
     Route::get('payment_methods', [PaymentMethodController::class, 'index']);
 
     Route::get('tips', [TipController::class, 'index']);
+
+    Route::get('operator_cards', [OperatorCardController::class, 'index']);
 });
