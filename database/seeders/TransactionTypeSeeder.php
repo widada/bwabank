@@ -24,8 +24,8 @@ class TransactionTypeSeeder extends Seeder
                     'updated_at' => now()
                 ],
                 [
-                    'name' => 'Purchase',
-                    'code' => 'purchase',
+                    'name' => 'Internet',
+                    'code' => 'internet',
                     'action' => 'dr',
                     'created_at' => now(),
                     'updated_at' => now()

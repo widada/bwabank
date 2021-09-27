@@ -14,7 +14,11 @@ class TransferHistoryController extends Controller
         $limit = $request->query('limit') !== null ? $request->query('limit') : 10;
 
         $transferHistories = TransferHistory::with('receiverUser:id,name,username,verified,profile_picture')
-                            ->paginate($limit);
+                            ->groupBy('receiver_id')
+                            ->toSql();
+
+        echo $transferHistories;
+                            // ->paginate($limit);
 
         $transferHistories->getCollection()->transform(function ($item) {
             $receiverUser = $item->receiverUser;

@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\TransferHistoryController;
 use App\Http\Controllers\Api\TipController;
 use App\Http\Controllers\Api\OperatorCardController;
+use App\Http\Controllers\Api\DataPlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,8 @@ Route::group(['middleware' => 'jwt.verify'], function ($router) {
     Route::post('top_ups', [TopUpController::class, 'store']);
 
     Route::post('transfers', [TransferController::class, 'store']);
+
+    Route::post('data_plans', [DataPlanController::class, 'store']);
 
     Route::get('transactions', [TransactionController::class, 'index']);
 
