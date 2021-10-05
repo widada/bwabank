@@ -26,7 +26,7 @@ class PaymentMethodController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,svg',
             'code' => 'required|string',
             'status' => 'required|in:active,inactive'
         ]);
@@ -58,7 +58,7 @@ class PaymentMethodController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'thumbnail' => 'image|mimes:jpeg,png,jpg',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,svg',
             'code' => 'required|string',
             'status' => 'required|in:active,inactive'
         ]);

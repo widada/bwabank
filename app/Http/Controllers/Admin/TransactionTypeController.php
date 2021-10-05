@@ -27,7 +27,7 @@ class TransactionTypeController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,svg',
             'code' => 'required|string',
             'action' => 'required|in:cr,dr'
         ]);
@@ -59,7 +59,7 @@ class TransactionTypeController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'thumbnail' => 'image|mimes:jpeg,png,jpg',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,svg',
             'code' => 'required|string',
             'action' => 'required|in:cr,dr'
         ]);
