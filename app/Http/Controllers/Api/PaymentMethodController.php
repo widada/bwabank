@@ -15,6 +15,7 @@ class PaymentMethodController extends Controller
                             ->get()
                             ->map(function ($item) {
                                 $item->thumbnail = $item->thumbnail ? url('storage/'.$item->thumbnail) : "";
+                                $item->time = '50 Min';
                                 return $item;
                             });
 
