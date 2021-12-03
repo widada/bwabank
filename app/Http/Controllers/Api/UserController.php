@@ -21,7 +21,7 @@ class UserController extends Controller
 
     public function show()
     {
-        $user = getUserById($this->user->id);
+        $user = getUser($this->user->id);
 
         return response()->json($user);
     }

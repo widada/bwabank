@@ -15,10 +15,7 @@ class TransferHistoryController extends Controller
 
         $transferHistories = TransferHistory::with('receiverUser:id,name,username,verified,profile_picture')
                             ->groupBy('receiver_id')
-                            ->toSql();
-
-        echo $transferHistories;
-                            // ->paginate($limit);
+                            ->paginate($limit);
 
         $transferHistories->getCollection()->transform(function ($item) {
             $receiverUser = $item->receiverUser;
