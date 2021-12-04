@@ -13,15 +13,19 @@ class TransferHistoryController extends Controller
 
         $limit = $request->query('limit') !== null ? $request->query('limit') : 10;
 
+        $sender = auth()->user();
+
         $transferHistories = TransferHistory::with('receiverUser:id,name,username,verified,profile_picture')
+                            ->select('receiver_id')
+                            ->where('sender_id', $sender->id)
                             ->groupBy('receiver_id')
                             ->paginate($limit);
 
         $transferHistories->getCollection()->transform(function ($item) {
             $receiverUser = $item->receiverUser;
-            $item->receiverUser->profile_picture =  $receiverUser->profile_picture ? 
+            $receiverUser->profile_picture =  $receiverUser->profile_picture ? 
                 url('storage/'.$receiverUser->profile_picture) : "";
-            return $item;
+            return $receiverUser;
         });
         
         return response()->json($transferHistories);
