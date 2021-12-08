@@ -18,6 +18,7 @@ class CreateWalletsTable extends Migration
             $table->float('balance', 10, 2);
             $table->string('pin')->nullable();
             $table->foreignId('user_id')->constrained('users');
+            $table->string('card_number')->unique();
             $table->timestamps();
         });
     }

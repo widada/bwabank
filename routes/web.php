@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\TransactionTypeController;
 use App\Http\Controllers\Admin\TipController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\RedirectPaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,4 @@ Route::group(['prefix' => 'admin'], function () {
     });
 });
 
-Route::get('/payment_success', function () {
-    return view('payment-success');
-});
+Route::get('/payment_finish', [RedirectPaymentController::class, 'finish']);
