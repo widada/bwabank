@@ -29,7 +29,9 @@ class UserController extends Controller
     public function getUserByUsername(Request $request, $username)
     {
         $users = User::select('id', 'name', 'username', 'verified', 'profile_picture')
-                    ->where('username', 'LIKE', '%'.$username.'%')->get();
+                    ->where('username', 'LIKE', '%'.$username.'%')
+                    ->where('id', '<>' ,$this->user->id)
+                    ->get();
 
         $users->map(function ($item) {
             $item->profile_picture = $item->profile_picture ? 
