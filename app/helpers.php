@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 function pinChecker($pin) {
     $userId = auth()->user()->id;
-    $wallet = Wallet::find($userId);
+    $wallet = Wallet::where('user_id', $userId)->first();
 
     if ($wallet == null) return false;
 
