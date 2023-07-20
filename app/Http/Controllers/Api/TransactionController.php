@@ -28,13 +28,15 @@ class TransactionController extends Controller
                                     ->paginate($limit);
         
         $transactions->getCollection()->transform(function ($item) {
-            $paymentMethod = $item->paymentMethod;
-            $item->paymentMethod->thumbnail =  $paymentMethod->thumbnail ? 
-                url('storage/'.$paymentMethod->thumbnail) : "";
-            
+            $paymentMethodThumbnail = $item->paymentMethod->thumbnail ? 
+                url('banks/'.$item->paymentMethod->thumbnail) : '';
+            $item->paymentMethod = clone $item->paymentMethod;
+            $item->paymentMethod->thumbnail = $paymentMethodThumbnail;
+
             $transactionType = $item->transactionType;
-            $item->transactionType->thumbnail =  $transactionType->thumbnail ? 
-                url('storage/'.$transactionType->thumbnail) : "";
+            $item->transactionType->thumbnail = $transactionType->thumbnail ?
+                url('transaction-type/'.$transactionType->thumbnail) : '';
+            
             return $item;
         });
 
